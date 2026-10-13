@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analysis result — Verity</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/">VERITY<span>.</span></a><a class="back" href="/">← New analysis</a></header>
+<main class="container result-page">
+  <div class="eyebrow">ANALYSIS COMPLETE</div><h1>Your result</h1>
+  <section class="result-card">
+    <span class="step">MODEL OUTPUT</span>
+    <h2>{{ prediction }}</h2>
+    {% if confidence is not none %}<p class="confidence">Model confidence: {{ "%.1f"|format(confidence * 100) }}%</p>{% else %}<p class="confidence">No calibrated confidence score available.</p>{% endif %}
+    {% if method == "demo" %}<div class="notice"><strong>Demo mode:</strong> The trained model file was not found, so a simple phrase-based fallback was used. This is not a reliable fake-news classifier. Train a model with a suitable dataset before using this for evaluation.</div>
+    {% else %}<div class="notice"><strong>Important:</strong> This classification reflects patterns in the training data, not proof of truth or falsehood. Verify with independent sources.</div>{% endif %}
+  </section>
+  <section class="panel"><span class="step">INPUT REVIEW</span><h2>{{ headline }}</h2><p class="article-preview">{{ article_text }}</p></section>
+  <section class="checklist"><h2>What to do next</h2><ul><li>Find the original publisher and publication date.</li><li>Look for the same claim in multiple reputable outlets.</li><li>Check cited evidence and consult relevant fact-checkers.</li></ul></section>
+  <a class="primary-link" href="/">Analyze another story <span>↗</span></a>
+</main>
+<footer>VERITY. <span>Educational project · Not a substitute for independent fact-checking</span></footer>
+</body></html>

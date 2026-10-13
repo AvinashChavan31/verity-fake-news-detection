@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verity — Fake News Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/">VERITY<span>.</span></a><span class="topnote">News literacy • Text analysis</span></header>
+<main class="container">
+  <section class="hero">
+    <div class="eyebrow">A responsible first-pass screening tool</div>
+    <h1>Pause. Check.<br><span>Then share.</span></h1>
+    <p>Paste a headline or article to inspect it with a text-classification model. This is a screening aid, not a fact-checking authority.</p>
+    <div class="notice"><strong>Important:</strong> A model cannot prove that a story is true or false. Verify claims with reputable, independent sources.</div>
+  </section>
+  <section class="panel">
+    <div class="panel-heading"><div><span class="step">01 / ANALYZE</span><h2>Check a story</h2></div><span class="pill">Text input</span></div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+    {% endwith %}
+    <form action="{{ url_for('predict') }}" method="post">
+      <label for="headline">Headline <span>(optional)</span></label>
+      <input id="headline" name="headline" maxlength="300" placeholder="Paste the headline here">
+      <label for="article_text">Article text <span>(headline or article text required)</span></label>
+      <textarea id="article_text" name="article_text" rows="7" placeholder="Paste the story or a meaningful excerpt…" maxlength="20000"></textarea>
+      <div class="form-foot"><span>Keep personal information out of submitted text.</span><button type="submit">Analyze text <span>↗</span></button></div>
+    </form>
+  </section>
+  <section class="method">
+    <div><span class="step">02 / UNDERSTAND</span><h2>How it works</h2></div>
+    <div class="method-grid">
+      <article><b>01</b><h3>Text processing</h3><p>Combines the headline and article text for analysis.</p></article>
+      <article><b>02</b><h3>Classification</h3><p>Uses a trained TF-IDF + Logistic Regression pipeline when one is installed.</p></article>
+      <article><b>03</b><h3>Review & verify</h3><p>Use the result as a prompt to verify the claim with credible sources.</p></article>
+    </div>
+  </section>
+  <section class="history">
+    <div class="panel-heading"><div><span class="step">03 / RECENT</span><h2>Recent checks</h2></div></div>
+    {% if history %}
+      <div class="history-list">{% for item in history %}
+        <div class="history-row"><div><strong>{{ item.headline }}</strong><small>{{ item.created_at }}</small></div><span class="result-tag">{{ item.prediction }}</span></div>
+      {% endfor %}</div>
+    {% else %}<p class="muted">Your recent checks will appear here after you analyze a story.</p>{% endif %}
+  </section>
+</main>
+<footer>VERITY. <span>Educational project · Not a substitute for independent fact-checking</span></footer>
+</body></html>
